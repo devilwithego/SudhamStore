@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudham Store - Premium Electronics</title>
+    <meta name="description" content="Premium electronics store specializing in smartphones, wireless earbuds, and smartwatches. Shop the latest tech with fast shipping and excellent customer service.">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Sudham Store - Premium Electronics">
+    <meta property="og:description" content="Premium electronics store specializing in smartphones, wireless earbuds, and smartwatches.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/sudham-store">
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        .gradient-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        
+        .gradient-hero {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .mobile-menu {
+            display: none;
+        }
+        
+        .mobile-menu.open {
+            display: block;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div id="toast-content"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-bolt text-2xl text-blue-600"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Sudham Store</h1>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Home</a>
+                    <a href="#phones" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Phones</a>
+                    <a href="#airbuds" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Airbuds</a>
+                    <a href="#watches" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Watches</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Contact</a>
+                </nav>
+
+                <!-- Search and Cart -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            id="search-input"
+                            class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    
+                    <button
+                        id="cart-btn"
+                        class="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    >
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    
+                    <button
+                        id="mobile-menu-btn"
+                        class="md:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    >
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-white border-t mobile-menu">
+            <div class="container mx-auto px-4 py-4">
+                <nav class="flex flex-col space-y-4">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Home</a>
+                    <a href="#phones" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Phones</a>
+                    <a href="#airbuds" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Airbuds</a>
+                    <a href="#watches" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Watches</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors nav-link">Contact</a>
+                </nav>
+                <div class="mt-4">
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        id="mobile-search-input"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="section">
+        <!-- Hero Section -->
+        <div class="gradient-hero text-white">
+            <div class="container mx-auto px-4 py-16">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6">
+                        Premium Electronics & Tech Accessories
+                    </h2>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">
+                        Discover the latest smartphones, wireless earbuds, and smartwatches from top brands
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Shop Now
+                        </button>
+                        <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+                            View Collections
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Navigation -->
+        <div class="bg-white py-8">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-wrap justify-center gap-4 md:gap-8">
+                    <a href="#phones" class="flex items-center space-x-2 bg-gray-100 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-mobile-alt text-xl"></i>
+                        <span class="font-semibold">Smartphones</span>
+                    </a>
+                    <a href="#airbuds" class="flex items-center space-x-2 bg-gray-100 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-headphones text-xl"></i>
+                        <span class="font-semibold">Wireless Earbuds</span>
+                    </a>
+                    <a href="#watches" class="flex items-center space-x-2 bg-gray-100 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-clock text-xl"></i>
+                        <span class="font-semibold">Smartwatches</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Products -->
+        <div class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        Featured Products
+                    </h2>
+                    <p class="text-xl text-gray-600">
+                        Discover our most popular tech essentials
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="featured-products">
+                    <!-- Featured products will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phones Section -->
+    <section id="phones" class="section hidden">
+        <div class="container mx-auto px-4 py-16">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Smartphones
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Latest flagship devices and budget-friendly options
+                </p>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="mb-8 flex flex-wrap gap-4 justify-center">
+                <select id="phone-brand-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Brands</option>
+                </select>
+                <select id="phone-price-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Prices</option>
+                    <option value="under500">Under $500</option>
+                    <option value="500-800">$500 - $800</option>
+                    <option value="800-1200">$800 - $1200</option>
+                    <option value="over1200">Over $1200</option>
+                </select>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="phones-grid">
+                <!-- Phone products will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Airbuds Section -->
+    <section id="airbuds" class="section hidden">
+        <div class="container mx-auto px-4 py-16">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Wireless Earbuds
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Premium audio experience with cutting-edge technology
+                </p>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="mb-8 flex flex-wrap gap-4 justify-center">
+                <select id="airbuds-brand-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Brands</option>
+                </select>
+                <select id="airbuds-price-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Prices</option>
+                    <option value="under150">Under $150</option>
+                    <option value="150-250">$150 - $250</option>
+                    <option value="250-350">$250 - $350</option>
+                    <option value="over350">Over $350</option>
+                </select>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="airbuds-grid">
+                <!-- Airbuds products will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Watches Section -->
+    <section id="watches" class="section hidden">
+        <div class="container mx-auto px-4 py-16">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Smartwatches
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Advanced fitness tracking and smart features
+                </p>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="mb-8 flex flex-wrap gap-4 justify-center">
+                <select id="watches-brand-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Brands</option>
+                </select>
+                <select id="watches-price-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Prices</option>
+                    <option value="under300">Under $300</option>
+                    <option value="300-500">$300 - $500</option>
+                    <option value="500-800">$500 - $800</option>
+                    <option value="over800">Over $800</option>
+                </select>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="watches-grid">
+                <!-- Watches products will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section hidden">
+        <div class="container mx-auto px-4 py-16">
+            <!-- Hero Section -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                    About Sudham Store
+                </h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Your trusted destination for premium electronics and cutting-edge technology. 
+                    We're passionate about bringing you the latest innovations in smartphones, 
+                    wireless audio, and wearable technology.
+                </p>
+            </div>
+
+            <!-- Values Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fas fa-bolt text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Innovation</h3>
+                    <p class="text-gray-600">
+                        We stay ahead of the curve, offering the latest technology and innovations.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fas fa-users text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Customer First</h3>
+                    <p class="text-gray-600">
+                        Our customers are at the heart of everything we do.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fas fa-shield-alt text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Quality</h3>
+                    <p class="text-gray-600">
+                        We only stock premium products from trusted brands.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fas fa-award text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Excellence</h3>
+                    <p class="text-gray-600">
+                        We strive for excellence in every aspect of our service.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Story Section -->
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Our Story</h2>
+                <div class="prose prose-lg max-w-none">
+                    <p class="text-gray-600 mb-6">
+                        Founded with a vision to make cutting-edge technology accessible to everyone, 
+                        Sudham Store has grown from a small startup to a trusted name in the electronics 
+                        retail industry. Our journey began with a simple belief: technology should enhance 
+                        and simplify people's lives.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        Today, we're proud to serve customers worldwide with our carefully curated selection 
+                        of smartphones, wireless earbuds, and smartwatches. Every product we offer has been 
+                        tested and approved by our team of tech enthusiasts, ensuring you get the best 
+                        value for your investment.
+                    </p>
+                    <p class="text-gray-600">
+                        We believe in building long-term relationships with our customers, which is why 
+                        we provide comprehensive support, competitive pricing, and a shopping experience 
+                        that's second to none.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <h3 class="text-4xl font-bold text-blue-600 mb-2">50,000+</h3>
+                    <p class="text-gray-600">Happy Customers</p>
+                </div>
+                <div>
+                    <h3 class="text-4xl font-bold text-blue-600 mb-2">500+</h3>
+                    <p class="text-gray-600">Products Available</p>
+                </div>
+                <div>
+                    <h3 class="text-4xl font-bold text-blue-600 mb-2">99%</h3>
+                    <p class="text-gray-600">Customer Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section hidden">
+        <div class="container mx-auto px-4 py-16">
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                    Contact Us
+                </h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Have a question about our products or need support? We're here to help! 
+                    Get in touch with our team and we'll respond as quickly as possible.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <h2 class="text-2xl font-bold mb-6">Send us a message</h2>
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="6"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            ></textarea>
+                        </div>
+                        <button
+                            type="submit"
+                            class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                        >
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-map-marker-alt text-2xl text-blue-600 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-1">Address</h3>
+                                <p class="text-gray-600">
+                                    123 Tech Street<br />
+                                    Digital City, TC 12345<br />
+                                    United States
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-phone text-2xl text-blue-600 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-1">Phone</h3>
+                                <p class="text-gray-600">
+                                    +1 (555) 123-4567<br />
+                                    Mon-Fri: 9AM-6PM EST
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-envelope text-2xl text-blue-600 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-1">Email</h3>
+                                <p class="text-gray-600">
+                                    info@sudhamstore.com<br />
+                                    support@sudhamstore.com
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-clock text-2xl text-blue-600 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-1">Business Hours</h3>
+                                <p class="text-gray-600">
+                                    Monday - Friday: 9AM - 6PM<br />
+                                    Saturday: 10AM - 4PM<br />
+                                    Sunday: Closed
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 gradient-hero">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Stay Updated</h2>
+                <p class="text-xl text-white opacity-90 mb-8">
+                    Get the latest tech news and exclusive deals delivered to your inbox
+                </p>
+                <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                    <input
+                        type="email"
+                        id="newsletter-email"
+                        placeholder="Enter your email"
+                        required
+                        class="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                    <button
+                        type="submit"
+                        class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                    >
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-bolt text-2xl text-blue-500 mr-2"></i>
+                        <h3 class="text-xl font-bold">Sudham Store</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Your trusted destination for premium electronics and tech accessories.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#phones" class="text-gray-400 hover:text-white transition-colors">Smartphones</a></li>
+                        <li><a href="#airbuds" class="text-gray-400 hover:text-white transition-colors">Wireless Earbuds</a></li>
+                        <li><a href="#watches" class="text-gray-400 hover:text-white transition-colors">Smartwatches</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Service -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Shipping Info</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>123 Tech Street, Digital City, TC 12345</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>info@sudhamstore.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>Mon-Fri: 9AM-6PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Sudham Store. All rights reserved. Built with modern web technologies.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 z-50 w-96 bg-white shadow-2xl cart-sidebar">
+        <div class="flex flex-col h-full">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b">
+                <h2 class="text-xl font-semibold">Shopping Cart</h2>
+                <button id="close-cart" class="p-2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-4">
+                <div id="empty-cart" class="text-center text-gray-500 py-8">
+                    <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
+                    <p>Your cart is empty</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div id="cart-footer" class="border-t p-4 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-blue-600">$0.00</span>
+                </div>
+                <button
+                    id="checkout-btn"
+                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product data
+        const products = {
+            phones: [
+                {
+                    id: 1,
+                    name: "iPhone 15 Pro",
+                    description: "Latest flagship with titanium design and advanced camera system",
+                    price: 999.00,
+                    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: true
+                },
+                {
+                    id: 2,
+                    name: "iPhone 15",
+                    description: "Premium performance with Dynamic Island and USB-C",
+                    price: 799.00,
+                    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 3,
+                    name: "iPhone 14 Pro",
+                    description: "Previous gen flagship with excellent camera performance",
+                    price: 899.00,
+                    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 4,
+                    name: "Samsung Galaxy S24 Ultra",
+                    description: "Premium flagship with S Pen and advanced AI features",
+                    price: 1199.00,
+                    image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 5,
+                    name: "Samsung Galaxy S24",
+                    description: "Flagship Android with excellent display and cameras",
+                    price: 799.00,
+                    image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 6,
+                    name: "Samsung Galaxy A54",
+                    description: "Mid-range phone with premium features and great value",
+                    price: 449.00,
+                    image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 7,
+                    name: "Google Pixel 8 Pro",
+                    description: "AI-powered photography with pure Android experience",
+                    price: 899.00,
+                    image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Google",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 8,
+                    name: "Google Pixel 8",
+                    description: "Premium Android with Google's latest AI features",
+                    price: 699.00,
+                    image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Google",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 9,
+                    name: "Google Pixel 7a",
+                    description: "Budget-friendly with flagship camera performance",
+                    price: 499.00,
+                    image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "Google",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 10,
+                    name: "OnePlus 12",
+                    description: "Flagship performance with fast charging technology",
+                    price: 799.00,
+                    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "OnePlus",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 11,
+                    name: "OnePlus 11",
+                    description: "Previous flagship with excellent performance and value",
+                    price: 699.00,
+                    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "OnePlus",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 12,
+                    name: "OnePlus Nord 3",
+                    description: "Mid-range excellence with premium build quality",
+                    price: 399.00,
+                    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "phones",
+                    brand: "OnePlus",
+                    inStock: true,
+                    featured: false
+                }
+            ],
+            airbuds: [
+                {
+                    id: 13,
+                    name: "AirPods Pro (2nd Gen)",
+                    description: "Premium wireless earbuds with active noise cancellation",
+                    price: 249.00,
+                    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: true
+                },
+                {
+                    id: 14,
+                    name: "AirPods (3rd Gen)",
+                    description: "Spatial audio and adaptive EQ for immersive sound",
+                    price: 179.00,
+                    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 15,
+                    name: "AirPods Max",
+                    description: "Over-ear headphones with premium build and sound",
+                    price: 549.00,
+                    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 16,
+                    name: "Sony WF-1000XM4",
+                    description: "Industry-leading noise cancellation with exceptional sound quality",
+                    price: 279.00,
+                    image: "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Sony",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 17,
+                    name: "Sony WF-1000XM3",
+                    description: "Previous generation with great noise cancellation",
+                    price: 199.00,
+                    image: "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Sony",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 18,
+                    name: "Sony WH-1000XM5",
+                    description: "Premium over-ear headphones with superior noise cancellation",
+                    price: 399.00,
+                    image: "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Sony",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 19,
+                    name: "Samsung Galaxy Buds2 Pro",
+                    description: "Intelligent active noise cancellation with 360 Audio",
+                    price: 229.00,
+                    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 20,
+                    name: "Samsung Galaxy Buds2",
+                    description: "Comfortable fit with excellent sound quality",
+                    price: 149.00,
+                    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 21,
+                    name: "Samsung Galaxy Buds FE",
+                    description: "Budget-friendly option with solid performance",
+                    price: 99.00,
+                    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 22,
+                    name: "Bose QuietComfort Earbuds",
+                    description: "Superior noise cancellation and comfort",
+                    price: 279.00,
+                    image: "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Bose",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 23,
+                    name: "Sennheiser Momentum True Wireless 3",
+                    description: "Audiophile-grade sound with premium materials",
+                    price: 249.00,
+                    image: "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "airbuds",
+                    brand: "Sennheiser",
+                    inStock: true,
+                    featured: false
+                }
+            ],
+            watches: [
+                {
+                    id: 24,
+                    name: "Apple Watch Series 9",
+                    description: "Advanced smartwatch with health monitoring and fitness tracking",
+                    price: 399.00,
+                    image: "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: true
+                },
+                {
+                    id: 25,
+                    name: "Apple Watch Ultra 2",
+                    description: "Most rugged and capable Apple Watch designed for adventure",
+                    price: 799.00,
+                    image: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 26,
+                    name: "Apple Watch SE",
+                    description: "Essential features at an accessible price",
+                    price: 249.00,
+                    image: "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Apple",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 27,
+                    name: "Samsung Galaxy Watch 6",
+                    description: "Advanced health monitoring with comprehensive fitness tracking",
+                    price: 329.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 28,
+                    name: "Samsung Galaxy Watch 6 Classic",
+                    description: "Premium design with rotating bezel and advanced features",
+                    price: 429.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 29,
+                    name: "Samsung Galaxy Watch FE",
+                    description: "Affordable smartwatch with essential health features",
+                    price: 199.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Samsung",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 30,
+                    name: "Garmin Venu 3",
+                    description: "Premium GPS smartwatch with long battery life",
+                    price: 449.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Garmin",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 31,
+                    name: "Garmin Forerunner 265",
+                    description: "Advanced running watch with training insights",
+                    price: 449.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Garmin",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 32,
+                    name: "Fitbit Sense 2",
+                    description: "Health-focused smartwatch with stress management",
+                    price: 299.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Fitbit",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 33,
+                    name: "Fitbit Versa 4",
+                    description: "Fitness-first smartwatch with 6+ day battery",
+                    price: 199.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Fitbit",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 34,
+                    name: "Amazfit GTR 4",
+                    description: "Premium design with exceptional battery life",
+                    price: 199.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Amazfit",
+                    inStock: true,
+                    featured: false
+                },
+                {
+                    id: 35,
+                    name: "Fossil Gen 6",
+                    description: "Wear OS smartwatch with classic design",
+                    price: 255.00,
+                    image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+                    category: "watches",
+                    brand: "Fossil",
+                    inStock: true,
+                    featured: false
+                }
+            ]
+        };
+
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('sudham_cart') || '[]');
+
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cart-count');
+            const cartItems = document.getElementById('cart-items');
+            const cartFooter = document.getElementById('cart-footer');
+            const cartTotal = document.getElementById('cart-total');
+            const emptyCart = document.getElementById('empty-cart');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            if (totalItems > 0) {
+                cartCount.textContent = totalItems;
+                cartCount.classList.remove('hidden');
+            } else {
+                cartCount.classList.add('hidden');
+            }
+
+            if (cart.length === 0) {
+                emptyCart.classList.remove('hidden');
+                cartFooter.classList.add('hidden');
+                cartItems.innerHTML = '<div id="empty-cart" class="text-center text-gray-500 py-8"><i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i><p>Your cart is empty</p></div>';
+            } else {
+                emptyCart.classList.add('hidden');
+                cartFooter.classList.remove('hidden');
+                cartTotal.textContent = `$${totalPrice.toFixed(2)}`;
+
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded" />
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-sm">${item.name}</h3>
+                                <p class="text-blue-600 font-bold">$${item.price}</p>
+                                <div class="flex items-center space-x-2 mt-2">
+                                    <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" class="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded flex items-center justify-center">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span class="w-8 text-center">${item.quantity}</span>
+                                    <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})" class="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded flex items-center justify-center">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                    <button onclick="removeFromCart(${item.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm ml-2">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function addToCart(product) {
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('sudham_cart', JSON.stringify(cart));
+            updateCartDisplay();
+            showToast(`${product.name} added to cart!`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('sudham_cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                localStorage.setItem('sudham_cart', JSON.stringify(cart));
+                updateCartDisplay();
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastContent = document.getElementById('toast-content');
+            
+            toastContent.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Product rendering functions
+        function createProductCard(product, variant = 'default') {
+            const isLarge = variant === 'featured';
+            return `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden product-card">
+                    <div class="relative">
+                        <img src="${product.image}" alt="${product.name}" class="w-full object-cover ${isLarge ? 'h-64' : 'h-48'}" />
+                        ${product.inStock ? '<span class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">In Stock</span>' : ''}
+                    </div>
+                    <div class="p-${isLarge ? '6' : '4'}">
+                        <h3 class="font-semibold text-gray-900 ${isLarge ? 'text-xl' : 'text-lg'} mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-4 ${isLarge ? 'text-base' : 'text-sm'}">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600 ${isLarge ? 'text-2xl' : 'text-lg'}">$${product.price}</span>
+                            <button 
+                                onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors ${!product.inStock ? 'opacity-50 cursor-not-allowed' : ''}"
+                                ${!product.inStock ? 'disabled' : ''}
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProducts() {
+            // Featured products
+            const featuredProducts = [...products.phones, ...products.airbuds, ...products.watches].filter(p => p.featured);
+            document.getElementById('featured-products').innerHTML = featuredProducts.map(product => createProductCard(product, 'featured')).join('');
+
+            // Category products
+            document.getElementById('phones-grid').innerHTML = products.phones.map(product => createProductCard(product)).join('');
+            document.getElementById('airbuds-grid').innerHTML = products.airbuds.map(product => createProductCard(product, 'featured')).join('');
+            document.getElementById('watches-grid').innerHTML = products.watches.map(product => createProductCard(product, 'featured')).join('');
+
+            // Populate brand filters
+            const phoneBrands = [...new Set(products.phones.map(p => p.brand))];
+            const airbudsBrands = [...new Set(products.airbuds.map(p => p.brand))];
+            const watchesBrands = [...new Set(products.watches.map(p => p.brand))];
+
+            document.getElementById('phone-brand-filter').innerHTML = '<option value="">All Brands</option>' + phoneBrands.map(brand => `<option value="${brand}">${brand}</option>`).join('');
+            document.getElementById('airbuds-brand-filter').innerHTML = '<option value="">All Brands</option>' + airbudsBrands.map(brand => `<option value="${brand}">${brand}</option>`).join('');
+            document.getElementById('watches-brand-filter').innerHTML = '<option value="">All Brands</option>' + watchesBrands.map(brand => `<option value="${brand}">${brand}</option>`).join('');
+        }
+
+        // Navigation functionality
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-blue-600', 'font-semibold');
+                link.classList.add('text-gray-700');
+            });
+            document.querySelector(`a[href="#${sectionId}"]`).classList.add('text-blue-600', 'font-semibold');
+            document.querySelector(`a[href="#${sectionId}"]`).classList.remove('text-gray-700');
+        }
+
+        // Filter functionality
+        function filterProducts(category, brandFilter, priceFilter) {
+            let filteredProducts = products[category];
+            
+            if (brandFilter) {
+                filteredProducts = filteredProducts.filter(product => product.brand === brandFilter);
+            }
+            
+            if (priceFilter) {
+                filteredProducts = filteredProducts.filter(product => {
+                    const price = product.price;
+                    switch (priceFilter) {
+                        case 'under500':
+                            return price < 500;
+                        case '500-800':
+                            return price >= 500 && price <= 800;
+                        case '800-1200':
+                            return price >= 800 && price <= 1200;
+                        case 'over1200':
+                            return price > 1200;
+                        case 'under150':
+                            return price < 150;
+                        case '150-250':
+                            return price >= 150 && price <= 250;
+                        case '250-350':
+                            return price >= 250 && price <= 350;
+                        case 'over350':
+                            return price > 350;
+                        case 'under300':
+                            return price < 300;
+                        case '300-500':
+                            return price >= 300 && price <= 500;
+                        case '500-800':
+                            return price >= 500 && price <= 800;
+                        case 'over800':
+                            return price > 800;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            const gridId = category + '-grid';
+            const variant = category === 'phones' ? 'default' : 'featured';
+            document.getElementById(gridId).innerHTML = filteredProducts.map(product => createProductCard(product, variant)).join('');
+        }
+
+        // Search functionality
+        function searchProducts(query) {
+            const allProducts = [...products.phones, ...products.airbuds, ...products.watches];
+            const searchResults = allProducts.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase()) ||
+                product.description.toLowerCase().includes(query.toLowerCase()) ||
+                product.brand.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            showSection('home');
+            document.getElementById('featured-products').innerHTML = searchResults.map(product => createProductCard(product, 'featured')).join('');
+            
+            if (searchResults.length === 0) {
+                document.getElementById('featured-products').innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-500">No products found matching your search.</p></div>';
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            updateCartDisplay();
+
+            // Navigation
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('href').substring(1);
+                    showSection(sectionId);
+                    document.getElementById('mobile-menu').classList.remove('open');
+                });
+            });
+
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('open');
+            });
+
+            // Cart functionality
+            document.getElementById('cart-btn').addEventListener('click', function() {
+                document.getElementById('cart-sidebar').classList.add('open');
+                document.getElementById('cart-overlay').classList.remove('hidden');
+            });
+
+            document.getElementById('close-cart').addEventListener('click', function() {
+                document.getElementById('cart-sidebar').classList.remove('open');
+                document.getElementById('cart-overlay').classList.add('hidden');
+            });
+
+            document.getElementById('cart-overlay').addEventListener('click', function() {
+                document.getElementById('cart-sidebar').classList.remove('open');
+                document.getElementById('cart-overlay').classList.add('hidden');
+            });
+
+            // Search functionality
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        searchProducts(query);
+                    }
+                }
+            });
+
+            document.getElementById('mobile-search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        searchProducts(query);
+                    }
+                }
+            });
+
+            // Filter functionality
+            document.getElementById('phone-brand-filter').addEventListener('change', function() {
+                filterProducts('phones', this.value, document.getElementById('phone-price-filter').value);
+            });
+
+            document.getElementById('phone-price-filter').addEventListener('change', function() {
+                filterProducts('phones', document.getElementById('phone-brand-filter').value, this.value);
+            });
+
+            document.getElementById('airbuds-brand-filter').addEventListener('change', function() {
+                filterProducts('airbuds', this.value, document.getElementById('airbuds-price-filter').value);
+            });
+
+            document.getElementById('airbuds-price-filter').addEventListener('change', function() {
+                filterProducts('airbuds', document.getElementById('airbuds-brand-filter').value, this.value);
+            });
+
+            document.getElementById('watches-brand-filter').addEventListener('change', function() {
+                filterProducts('watches', this.value, document.getElementById('watches-price-filter').value);
+            });
+
+            document.getElementById('watches-price-filter').addEventListener('change', function() {
+                filterProducts('watches', document.getElementById('watches-brand-filter').value, this.value);
+            });
+
+            // Form submissions
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showToast('Message sent! We\'ll get back to you soon.');
+                this.reset();
+            });
+
+            document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showToast('Thank you for subscribing!');
+                this.reset();
+            });
+
+            // Checkout functionality
+            document.getElementById('checkout-btn').addEventListener('click', function() {
+                showToast('Checkout functionality would be implemented here');
+            });
+        });
+    </script>
+</body>
+</html>
